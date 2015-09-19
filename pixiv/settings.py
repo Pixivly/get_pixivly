@@ -65,6 +65,7 @@ ITEM_PIPELINES = {
    'pixiv.pipelines.PixivPipeline': 300,
 }
 
+PAGE = 2
 IMAGES_STORE = '/path/to/store/image'
 JSONS_STORE = '/path/to/store/json'
 

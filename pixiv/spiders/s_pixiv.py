@@ -1,10 +1,11 @@
+import re
 import os
 import json
 from datetime import datetime, timedelta
 import scrapy
 from scrapy.http import Request
 from pixiv.items import PixivItem
-from pixiv.settings import JSONS_STORE, IMAGES_STORE
+from pixiv.settings import PAGE, JSONS_STORE, IMAGES_STORE
 
 
 class PixivSpider(scrapy.Spider):
@@ -34,13 +35,15 @@ class PixivSpider(scrapy.Spider):
         date = self.start_date
         # every day
         while date != self.end_date:
-            url = self.url_pattern.format(date.strftime('%Y%m%d'), 1)
-            yield Request(url)
+            for p in range(1, PAGE+1):
+                url = self.url_pattern.format(date.strftime('%Y%m%d'), p)
+                yield Request(url)
             date = date - dt
 
     def parse(self, response):
         jsondata = json.loads(response.body)
-        file = os.path.join(JSONS_STORE, jsondata['date']+'.json')
+        p = re.search(r'p=(\d+)', response.url).groups()[0]
+        file = os.path.join(JSONS_STORE, '%s_%02d.json'%(jsondata['date'], int(p)))
         with open(file, 'w') as fd:
             json.dump(jsondata, fd)
         for illust in jsondata['contents']:
