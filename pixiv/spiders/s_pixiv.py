@@ -14,7 +14,13 @@ class PixivSpider(scrapy.Spider):
     """
     name = 'pixiv'
     allowed_domains = ['pixiv.net']
-    url_pattern = 'http://www.pixiv.net/ranking.php?mode=daily&content=illust&format=json&date={0}&p={1}'
+    url_pattern = 'https://www.pixiv.net/ranking.php?mode=daily&content=illust&format=json&date={0}&p={1}'
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
+        'Host': 'www.pixiv.net',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+    }
 
     def __init__(self, start=None, end=None, *args, **kwargs):
         super(PixivSpider, self).__init__(*args, **kwargs)
@@ -37,7 +43,8 @@ class PixivSpider(scrapy.Spider):
         while date != self.end_date:
             for p in range(1, PAGE+1):
                 url = self.url_pattern.format(date.strftime('%Y%m%d'), p)
-                yield Request(url)
+                req = Request(url, headers=self.headers)
+                yield req
             date = date - dt
 
     def parse(self, response):

@@ -66,8 +66,8 @@ ITEM_PIPELINES = {
 }
 
 PAGE = 2
-IMAGES_STORE = '/path/to/store/image'
-JSONS_STORE = '/path/to/store/json'
+IMAGES_STORE = './data/image'
+JSONS_STORE = './data/json'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
